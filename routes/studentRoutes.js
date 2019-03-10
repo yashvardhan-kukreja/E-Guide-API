@@ -49,4 +49,35 @@ router.post("/unfavorTeacherById", (req, res) => {
     let fav_id = req.body.fav_id;
     StudentController.unfavorTeacherById(fav_id).then(data => res.json(data)).catch(err => res.json(err));
 });
+
+
+router.get("/project/all", (req, res) => {
+    StudentController.fetchAllProjects()
+        .then(data => res.json(data))
+        .catch(err => res.json(err));
+});
+
+router.post("/project/request", (req, res) => {
+    let student_id = req.decoded._id;
+    let project_id = req.body.project_id;
+    StudentController.requestForAProject(student_id, project_id)
+        .then(data => res.json(data))
+        .catch(err => res.json(err));
+});
+
+router.get("/project/unapproved", (req, res) => {
+    let student_id = req.decoded._id;
+    StudentController.fetchProjectsWithMyUnapprovedRequests(student_id)
+        .then(data => res.json(data))
+        .catch(err => res.json(err));
+});
+
+router.get("/project/approved", (req, res) => {
+    let student_id = req.decoded._id;
+    StudentController.fetchProjectsWithMyApprovedRequests(student_id)
+        .then(data => res.json(data))
+        .catch(err => res.json(err));
+});
+
+
 module.exports = router;

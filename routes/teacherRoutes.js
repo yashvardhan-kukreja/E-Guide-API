@@ -47,6 +47,41 @@ router.get('/fetchFavStudents', (req, res) => {
     TeacherController.fetchFavoredStudentsOfATeacher(teacher_id).then(data => res.json(data)).catch(err => res.json(err));
 });
 
+router.post("/project", (req, res) => {
+    let teacher_id = req.decoded._id;
+    let title = req.body.title;
+    let description = req.body.description;
+    let skill_ids = req.body.skill_ids;
+    let link = req.body.link;
+
+    TeacherController.hostAProject(teacher_id, title, description, skill_ids, link)
+        .then(data => res.json(data))
+        .catch(err => res.json(err));
+});
+
+router.get("/project/my", (req, res) => {
+    let teacher_id = req.decoded._id;
+    TeacherController.fetchMyProjects(teacher_id)
+        .then(data => res.json(data))
+        .catch(err => res.json(err));
+});
+
+router.put("/project/request/approve", (req, res) => {
+    let project_id = req.body.project_id;
+    let student_id = req.body.student_id;
+    TeacherController.approveRequest(project_id, student_id)
+    .then(data => res.json(data))
+    .catch(err => res.json(err));
+});
+
+router.put("/project/request/reject", (req, res) => {
+    let project_id = req.body.project_id;
+    let student_id = req.body.student_id;
+    TeacherController.rejectRequest(project_id, student_id)
+        .then(data => res.json(data))
+        .catch(err => res.json(err));
+});
+
 module.exports = {
     router: router,
     untoken_router: untoken_router

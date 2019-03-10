@@ -1,6 +1,7 @@
 const TeacherTransactions = require('../database/teacher/teacherTransactions');
 const SkillTransactions = require('../database/skill/skillTransactions');
 const FavoriteTransactions = require('../database/favorite/favoriteTransactions');
+const ProjectTransactions = require("../database/project/projectTransactions");
 
 const jwt = require('jsonwebtoken');
 const Promise = require('bluebird');
@@ -84,3 +85,80 @@ module.exports.fetchFavoredStudentsOfATeacher = (teacherId) => {
         });
     });
 };
+
+module.exports.hostAProject = (teacherId, title, description, skills, link) => {
+    return new Promise((resolve, reject) => {
+        if (typeof(skills) == typeof("some string"))
+            skills = [skills];
+        ProjectTransactions.hostAProject(teacherId, title, description, skills, link, (err) => {
+            if (err) {
+                console.error(err);
+                reject({success: false, message: "An error occurred"});
+            } else {
+                resolve({success: true, message: "Project hosted successfully"});
+            }
+        });
+    });
+}
+
+module.exports.fetchMyProjects = (teacherId) => {
+    return new Promise((resolve, reject) => {
+        ProjectTransactions.fetchProjectsByTeacherId(teacherId, (err, outputProjs) => {
+            if (err) {
+                console.error(err);
+                reject({success: false, message: "An error occurred"});
+            } else {
+                if (!outputProjs || outputProjs.length <= 0)
+                    reject({success: false, message: "No projects found"});
+                else {
+                    resolve({
+                        success: true,
+                        message: "All of my projects fetched successfully",
+                        projects: outputProjs
+                    });
+                }
+            }
+        });
+    });
+}
+
+
+module.exports.approveRequest = (project_id, student_id) => {
+    return new Promise((resolve, reject) => {
+        ProjectTransactions.removeARequest(project_id, student_id, (err, outputProject) => {
+            if (err) {
+                console.error(err);
+                reject({success: false, message: "An error occurred"});
+            } else {
+                if (!outputProject)
+                    reject({success: false, message: "Project not found with the provided id"});
+                else {
+                    ProjectTransactions.addAStudent(project_id, student_id, (err, outputProject) => {
+                        if (err) {
+                            console.error(err);
+                            reject({success: false, message: "An error occurred"});
+                        } else {
+                            resolve({success: true, message: "Approved the project request for the student"});
+                        }
+                    });
+                }
+            }
+        });
+    });
+}
+
+module.exports.rejectRequest = (project_id, student_id) => {
+    return new Promise((resolve, reject) => {
+        ProjectTransactions.removeARequest(project_id, student_id, (err, outputProject) => {
+            if (err) {
+                console.error(err);
+                reject({success: false, message: "An error occurred"});
+            } else {
+                if (!outputProject)
+                    reject({success: false, message: "Project not found with the provided id"});
+                else
+                    resolve({success: true, message: "Rejected a student request"});
+            }
+        });
+    });
+}
