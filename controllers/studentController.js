@@ -161,7 +161,7 @@ module.exports.fetchProjectsWithMyApprovedRequests = (user_id) => {
                 reject({success: false, message: "An error occurred"});
             } else {
                 if (!outputProjs || outputProjs.length <= 0)
-                    reject({success: false, message: "No projects found with approved requests"});
+                    reject({success: false, message: "No projects found with approved requests", projects: []});
                 else {
                     resolve({
                         success: true,

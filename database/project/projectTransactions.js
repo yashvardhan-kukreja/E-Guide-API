@@ -29,6 +29,13 @@ module.exports.fetchProjectById = (id, next) => {
         {
             path: 'skills',
             model: 'Skill'
+        },
+        {
+            path: 'teacher',
+            populate: {
+                path: 'skills',
+                model: 'Skill'
+            }
         }
     ]).exec(next);
 }
@@ -50,6 +57,13 @@ module.exports.fetchProjectsByTeacherId = (teacher_id, next) => {
         {
             path: 'skills',
             model: 'Skill'
+        },
+        {
+            path: 'teacher',
+            populate: {
+                path: 'skills',
+                model: 'Skill'
+            }
         }
     ]).exec(next);
 }
@@ -83,6 +97,13 @@ module.exports.fetchAllProjects = (next) => {
         {
             path: 'skills',
             model: 'Skill'
+        },
+        {
+            path: 'teacher',
+            populate: {
+                path: 'skills',
+                model: 'Skill'
+            }
         }
     ]).exec(next);
 }
@@ -104,6 +125,13 @@ module.exports.fetchProjectsWithUnapprovedRequests = (user_id, next) => {
         {
             path: 'skills',
             model: 'Skill'
+        },
+        {
+            path: 'teacher',
+            populate: {
+                path: 'skills',
+                model: 'Skill'
+            }
         }
     ]).exec(next);
 }
@@ -125,6 +153,13 @@ module.exports.fetchProjectsWithApproved = (user_id, next) => {
         {
             path: 'skills',
             model: 'Skill'
+        },
+        {
+            path: 'teacher',
+            populate: {
+                path: 'skills',
+                model: 'Skill'
+            }
         }
     ]).exec(next);
 }
